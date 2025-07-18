@@ -4055,3 +4055,40 @@ input:focus:-ms-input-placeholder {
 	    overflow-y: scroll;
 	}
 }
+.fancy-radio-group {
+  display: flex;
+  gap: 1rem;
+  margin: 1rem 0;
+}
+
+.fancy-radio-group label {
+  position: relative;
+  cursor: pointer;
+}
+
+.fancy-radio-group input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.fancy-radio-group span {
+  display: inline-block;
+  padding: 0.5rem 1.2rem;
+  border: 2px solid #ccc;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+  font-weight: 500;
+  color: #333;
+  background: #f9f9f9;
+}
+
+.fancy-radio-group input[type="radio"]:checked + span {
+  background-color: #111;
+  color: #fff;
+  border-color: #111;
+}
+
+.fancy-radio-group span:hover {
+  border-color: #666;
+}

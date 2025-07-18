@@ -4,8 +4,9 @@ require_once __DIR__ . '/vendor/autoload.php';
 
 
 use Carbon_Fields\Carbon_Fields;
-use Carbon_Fields\Container;
-use Carbon_Fields\Field;
+
+add_theme_support('post-thumbnails');
+
 
 function theme_enqueue_styles()
 {
@@ -328,3 +329,30 @@ add_action('init', 'disable_wp_emojicons');
 add_action('after_setup_theme', function () {
   remove_action('wp_head', 'wp_enqueue_speculationrules', 1);
 });
+
+function register_project_post_type() {
+    register_post_type('project', [
+        'labels' => [
+            'name' => 'Projects',
+            'singular_name' => 'Project',
+        ],
+        'public' => true,
+        'has_archive' => true,
+        'rewrite' => ['slug' => 'projects'],
+        'supports' => ['title', 'editor', 'thumbnail', 'comments'],
+        'menu_icon' => 'dashicons-portfolio',
+    ]);
+}
+add_action('init', function () {
+    register_project_post_type(); // ensure it's defined before flushing
+    // flush_rewrite_rules(); // expensive, avoid on production
+});
+
+add_action('comment_post', function($comment_id) {
+  if (isset($_POST['comment_type'])) {
+    $type = sanitize_text_field($_POST['comment_type']);
+    add_comment_meta($comment_id, 'comment_type', $type, true);
+  }
+});
+
+
