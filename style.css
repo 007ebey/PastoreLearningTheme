@@ -4092,3 +4092,19 @@ input:focus:-ms-input-placeholder {
 .fancy-radio-group span:hover {
   border-color: #666;
 }
+
+.video-block-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 770px;
+  height: 433px;
+  background: transparent;
+  z-index: 10;
+  cursor: not-allowed;
+}
+
+#play-video-button {
+  position: relative;
+  z-index: 20;
+}

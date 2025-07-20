@@ -1,4 +1,5 @@
 <?php
+
 use Carbon_Fields\Container;
 use Carbon_Fields\Field;
 
@@ -13,12 +14,7 @@ add_action('carbon_fields_register_fields', function () {
                 ->set_help_text('e.g., 02 May 2013'),
             Field::make('text', 'project_link', 'External Link')
                 ->set_help_text('e.g., https://example.com'),
-            Field::make('complex', 'project_images', 'Slider Images')
-                ->add_fields([
-                    Field::make('image', 'image', 'Image'),
-                ])
-                ->set_layout('tabbed-vertical')
-                ->set_help_text('Add multiple images for the project slider'),
+            Field::make('text', 'project_video_url', 'YouTube url')
+                ->set_help_text('Paste url example https://www.youtube.com/live/-KYc59DYLnu ')
         ]);
 });
-

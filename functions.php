@@ -283,6 +283,14 @@ function theme_enqueue_scripts()
     'feather-icons',
     'feather.replace();'
   );
+
+  wp_enqueue_script(
+    'youtube-iframe-api',
+    'https://www.youtube.com/iframe_api',
+    array(), // No dependencies
+    null,    // No version needed
+    true     // Load in footer
+  );
 }
 add_action('wp_enqueue_scripts', 'theme_enqueue_scripts');
 
@@ -330,29 +338,114 @@ add_action('after_setup_theme', function () {
   remove_action('wp_head', 'wp_enqueue_speculationrules', 1);
 });
 
-function register_project_post_type() {
-    register_post_type('project', [
-        'labels' => [
-            'name' => 'Projects',
-            'singular_name' => 'Project',
-        ],
-        'public' => true,
-        'has_archive' => true,
-        'rewrite' => ['slug' => 'projects'],
-        'supports' => ['title', 'editor', 'thumbnail', 'comments'],
-        'menu_icon' => 'dashicons-portfolio',
-    ]);
+function register_project_post_type()
+{
+  register_post_type('project', [
+    'labels' => [
+      'name' => 'Projects',
+      'singular_name' => 'Project',
+    ],
+    'public' => true,
+    'has_archive' => true,
+    'rewrite' => ['slug' => 'projects'],
+    'supports' => ['title', 'editor', 'thumbnail', 'comments'],
+    'menu_icon' => 'dashicons-portfolio',
+  ]);
 }
 add_action('init', function () {
-    register_project_post_type(); // ensure it's defined before flushing
-    // flush_rewrite_rules(); // expensive, avoid on production
+  register_project_post_type(); // ensure it's defined before flushing
+  // flush_rewrite_rules(); // expensive, avoid on production
 });
 
-add_action('comment_post', function($comment_id) {
+add_action('comment_post', function ($comment_id) {
   if (isset($_POST['comment_type'])) {
     $type = sanitize_text_field($_POST['comment_type']);
     add_comment_meta($comment_id, 'comment_type', $type, true);
   }
 });
 
+add_action('init', function () {
+    register_post_type('testimonial', [
+        'labels' => [
+            'name' => 'Testimonials',
+            'singular_name' => 'Testimonial',
+        ],
+        'public' => true,
+        'has_archive' => false,
+        'show_in_rest' => true,
+        'supports' => ['title', 'editor', 'custom-fields'],
+        'menu_icon' => 'dashicons-testimonial',
+    ]);
+});
 
+// Handle form submission
+add_action('admin_post_nopriv_submit_testimonial', 'render_testimonial_confession_form');
+add_action('admin_post_submit_testimonial', 'render_testimonial_confession_form');
+
+function render_testimonial_confession_form() {
+    handle_testimonial_submission();
+}
+
+function handle_testimonial_submission() {
+    if (
+        isset($_POST['name'], $_POST['email'], $_POST['message']) &&
+        !empty($_POST['name']) && !empty($_POST['email']) && !empty($_POST['message'])
+    ) {
+        $post_id = wp_insert_post([
+            'post_type' => 'testimonial',
+            'post_title' => sanitize_text_field($_POST['name']),
+            'post_content' => sanitize_textarea_field($_POST['message']),
+            'post_status' => 'pending',
+        ]);
+
+        if ($post_id && !is_wp_error($post_id)) {
+            update_post_meta($post_id, 'email', sanitize_email($_POST['email']));
+            // Carbon Field is false by default (unchecked)
+        }
+    }
+    wp_redirect(home_url('/thank-you/'));
+    exit;
+}
+
+add_action('wp_ajax_filter_projects_by_category', 'filter_projects_by_category_callback');
+add_action('wp_ajax_nopriv_filter_projects_by_category', 'filter_projects_by_category_callback');
+
+function filter_projects_by_category_callback() {
+  $category = sanitize_text_field($_GET['category'] ?? '');
+
+  $args = [
+    'post_type' => 'project',
+    'post_status' => 'publish',
+    'posts_per_page' => -1,
+    'meta_query' => [
+      [
+        'key' => 'project_categories',
+        'value' => $category,
+        'compare' => 'LIKE',
+      ]
+    ]
+  ];
+
+  $query = new WP_Query($args);
+
+  if ($query->have_posts()) :
+    while ($query->have_posts()) : $query->the_post(); ?>
+      <div class="col-sm-6 mb-4 project-item">
+        <div class="project-box">
+          <h4><?php the_title(); ?></h4>
+          <?php if (has_post_thumbnail()): ?>
+            <div class="project-thumb">
+              <?php the_post_thumbnail('medium'); ?>
+            </div>
+          <?php endif; ?>
+          <p><?php the_excerpt(); ?></p>
+        </div>
+      </div>
+    <?php endwhile;
+  else :
+    echo '<p>No projects found in this category.</p>';
+  endif;
+
+  wp_reset_postdata();
+  wp_die();
+}

@@ -16,5 +16,7 @@ get_header();
 <?php get_template_part('template-parts/journey-offering'); ?>
 <?php get_template_part('template-parts/portfolio'); ?>
 <?php get_template_part('template-parts/articles'); ?>
+<?php get_template_part('template-parts/testimonials'); ?>
+<?php get_template_part('template-parts/submit-testimonial'); ?>
 
 <?php get_footer(); ?>
