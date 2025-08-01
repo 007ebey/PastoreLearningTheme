@@ -14,9 +14,9 @@ get_header();
 <?php get_template_part('template-parts/banner'); ?>
 <?php get_template_part('template-parts/offering'); ?>
 <?php get_template_part('template-parts/journey-offering'); ?>
-<?php get_template_part('template-parts/portfolio'); ?>
-<?php get_template_part('template-parts/articles'); ?>
+<?php get_template_part('template-parts/see-works'); ?>
 <?php get_template_part('template-parts/testimonials'); ?>
 <?php get_template_part('template-parts/submit-testimonial'); ?>
+<?php get_template_part('template-parts/main-footer'); ?>
 
 <?php get_footer(); ?>

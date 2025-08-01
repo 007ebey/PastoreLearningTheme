@@ -1,6 +1,6 @@
 <?php $tabs = carbon_get_the_post_meta('page_tabs_section'); ?>
 <?php if (!empty($tabs)): ?>
-  <div class="light-wrapper">
+  <div class="light-wrapper" id="journey">
     <div class="container inner">
       <div class="tabs services tab-container">
         <div class="panel-container">
@@ -18,7 +18,14 @@
               <a href="#<?= esc_attr($tab['tab_id']); ?>">
                 <div class="pin"></div>
                 <div class="root"></div>
-                <div class="icon"><i class="<?= esc_attr($tab['icon_class']); ?> icn"></i></div>
+                <?php /*
+<div class="icon">
+  <i class="<?= esc_attr($tab['icon_class']); ?> icn"></i>
+</div>
+*/ ?>
+                <div class="icon">
+                  <i class="feather-icon" data-feather="<?= esc_attr($tab['icon_class']); ?>"></i>
+                </div>
                 <h4><?= esc_html($tab['tab_title']); ?></h4>
               </a>
             </li>

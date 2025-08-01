@@ -449,3 +449,22 @@ function filter_projects_by_category_callback() {
   wp_reset_postdata();
   wp_die();
 }
+
+
+function register_portfolio_post_type() {
+    register_post_type('portfolio', array(
+        'labels' => array(
+            'name' => 'Portfolios',
+            'singular_name' => 'Portfolio',
+        ),
+        'public' => true,
+        'has_archive' => true,
+        'rewrite' => array('slug' => 'portfolio'),
+        'menu_icon' => 'dashicons-portfolio',
+        'supports' => array('title', 'editor', 'thumbnail'),
+        'taxonomies' => array('category'), // ✅ Adds built-in category support
+  
+    ));
+}
+add_action('init', 'register_portfolio_post_type');
+

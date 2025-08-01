@@ -46,33 +46,141 @@ get_header();
           </div>
         </div>
       </div>
-      <!-- /.row -->
-       <div class="row">
-        <div class="divide30"></div>
-        <!-- /.col-sm-8 -->
-        <div class="col-sm-8 lp30">
-          <h3>Project Details</h3>
-          <p> <?php the_content(); ?></p>
-          <div class="divide5"></div>
-        </div>
 
-        <div class="col-sm-4">
-          <ul class="item-details">
-            <li><span>Date:</span> <?php echo esc_html(carbon_get_the_post_meta('project_date')); ?></li>
-            <li><span>Categories:</span> <?php echo esc_html(carbon_get_the_post_meta('project_categories')); ?></li>
-            <li><span>Client:</span> <?php echo esc_html(carbon_get_the_post_meta('project_client')); ?></li>
-            <li><span>Link:</span> <a href="<?php echo esc_url(carbon_get_the_post_meta('project_link')); ?>"><?php echo esc_html(carbon_get_the_post_meta('project_link')); ?></a></li>
-          </ul>
+
+      <div class="dark-wrapper">
+        <div class="container">
+          <!-- /.row -->
+          <div class="row">
+            <div class="divide30"></div>
+            <!-- /.col-sm-8 -->
+            <div class="col-sm-8 lp30">
+              <h3>Project Details</h3>
+              <p> <?php the_content(); ?></p>
+              <div class="divide5"></div>
+            </div>
+
+            <div class="col-sm-4">
+              <ul class="item-details">
+                <li><span>Date:</span> <?php echo esc_html(carbon_get_the_post_meta('project_date')); ?></li>
+                <li><span>Categories:</span> <?php echo esc_html(carbon_get_the_post_meta('project_categories')); ?></li>
+                <li><span>Client:</span> <?php echo esc_html(carbon_get_the_post_meta('project_client')); ?></li>
+                <li><span>Link:</span> <a href="<?php echo esc_url(carbon_get_the_post_meta('project_link')); ?>"><?php echo esc_html(carbon_get_the_post_meta('project_link')); ?></a></li>
+              </ul>
+            </div>
+            <!-- /.col-sm-4 -->
+          </div>
         </div>
-        <!-- /.col-sm-4 -->
-       </div>
+      </div>
 
     </div>
     <!-- /.container -->
   </div>
 
   <div class="light-wrapper">
+    <div class="container">
+      <div class="row" id="test">
+        <?php if (comments_open()) : ?>
+          <?php if (is_user_logged_in()) : ?>
+            <div class="divide50"></div>
+            <?php
+            $current_user = wp_get_current_user();
+            $user_id = $current_user->ID;
+            $is_admin = current_user_can('administrator');
 
+            // Get all approved comments for this post
+            $comments = get_comments([
+              'status'  => 'approve',
+              'post_id' => get_the_ID(),
+            ]);
+            $comment_count = count($comments);
+            ?>
+
+            <div id="comments">
+              <h3><?php echo $comment_count; ?> Comment<?php echo $comment_count === 1 ? '' : 's'; ?></h3>
+
+              <ol id="singlecomments" class="commentlist">
+                <?php
+
+                foreach ($comments as $comment) {
+                  // Show only user's own comments unless admin
+                  if ($is_admin || $comment->user_id == $user_id) {
+                    $comment_type = get_comment_meta($comment->comment_ID, 'comment_type', true);
+                ?>
+                    <li>
+                      <div class="user">
+                        <?php echo get_avatar($comment, 64); ?>
+                      </div>
+                      <div class="message">
+                        <div class="image-caption">
+                          <div class="info">
+                            <h2><?php echo esc_html($comment->comment_author); ?></h2>
+                            <div class="meta">
+                              <div class="date"><?php echo get_comment_date('', $comment); ?></div>
+                              <a class="reply-link" href="#">Reply</a>
+                            </div>
+                          </div>
+                          <p>
+                            <?php if ($comment_type): ?>
+                              <b><?php echo esc_html($comment_type); ?></b>
+                            <?php endif; ?>
+                            <?php echo esc_html($comment->comment_content); ?>
+                          </p>
+                        </div>
+                      </div>
+                    </li>
+                <?php
+                  }
+                }
+                ?>
+
+              </ol>
+            </div>
+            <div class="comment-form-wrapper">
+              <h3>Would you like to share your thoughts?</h3>
+              <p>Your email address will not be published. Required fields are marked *</p>
+
+              <form class="comment-form" name="commentform" action="<?php echo site_url('/wp-comments-post.php'); ?>" method="post" id="commentform">
+                <div class="name-field">
+                  <input type="text" name="author" id="author" title="Name*" value="<?php echo esc_attr(wp_get_current_user()->display_name); ?>" required readonly />
+                </div>
+
+                <div class="email-field">
+                  <input type="email" name="email" id="email" title="Email*" value="<?php echo esc_attr(wp_get_current_user()->user_email); ?>" required readonly />
+                </div>
+
+                <fieldset class="comment-type-field fancy-radio-group">
+                  <legend>Comment Type</legend>
+                  <label>
+                    <input type="radio" name="comment_type" value="Learning" required>
+                    <span>Learning</span>
+                  </label>
+                  <label>
+                    <input type="radio" name="comment_type" value="Note">
+                    <span>Note</span>
+                  </label>
+                  <label>
+                    <input type="radio" name="comment_type" value="Action">
+                    <span>Action</span>
+                  </label>
+                </fieldset>
+
+                <div class="message-field">
+                  <textarea name="comment" id="comment" rows="5" cols="30" title="Enter your comment here..." required></textarea>
+                </div>
+
+                <input type="hidden" name="comment_post_ID" value="<?php echo get_the_ID(); ?>" />
+                <input type="hidden" name="comment_parent" id="comment_parent" value="0" />
+
+                <input type="submit" value="Submit" name="submit" class="btn btn-submit" />
+              </form>
+            </div>
+          <?php else : ?>
+            <p>You must <a href="<?php echo esc_url(wp_login_url(get_permalink())); ?>">log in</a> to post a comment.</p>
+          <?php endif; ?>
+        <?php endif; ?>
+      </div>
+    </div>
   </div>
 
 

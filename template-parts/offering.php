@@ -5,7 +5,7 @@ $services = carbon_get_the_post_meta('services_items');
 ?>
 
 <?php if (!empty($services)): ?>
-<div class="dark-wrapper">
+<div class="dark-wrapper" id="offering">
   <div class="container inner">
     <div class="section-title text-center">
       <h2><?= esc_html($section_title); ?></h2>

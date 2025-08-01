@@ -1,7 +1,7 @@
 <div class="offset"></div>
 <?php $slides = carbon_get_the_post_meta('page_slider_slides'); ?>
 <?php if (!empty($slides)): ?>
-  <div class="fullwidthbanner-container revolution">
+  <div class="fullwidthbanner-container revolution" id="announcements">
     <div class="fullwidthbanner">
       <ul>
         <?php foreach ($slides as $slide): ?>

@@ -1,4 +1,4 @@
-<div class="light-wrapper">
+<div class="light-wrapper" id="articles">
   <div class="container inner">
     <div class="section-title text-center bm20">
       <h2>From the Latest Articles</h2>
