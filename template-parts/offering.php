@@ -9,7 +9,10 @@ $services = carbon_get_the_post_meta('services_items');
   <div class="container inner">
     <div class="section-title text-center">
       <h2><?= esc_html($section_title); ?></h2>
-      <span class="icon"><i class="<?= esc_attr($section_icon); ?>"></i></span>
+      <?php /**   
+       * <span class="icon"><i class="<?= esc_attr($section_icon); ?>"></i></span>
+       */?>
+      <span class="icon"><i class="feather-icon" data-feather="<?= esc_attr($section_icon); ?>" ></i></span>
     </div>
     <div class="col-services">
       <?php foreach (array_chunk($services, 3) as $row): ?>
@@ -17,7 +20,12 @@ $services = carbon_get_the_post_meta('services_items');
           <?php foreach ($row as $service): ?>
             <div class="col-sm-4">
               <div class="icon">
-                <i class="<?= esc_attr($service['icon_class']); ?> icn"></i>
+                <?php 
+                  /**
+                   * <i class="<?= esc_attr($service['icon_class']); ?> icn"></i>
+                   */
+                ?>
+                <i class="feather-icon" data-feather="<?= esc_attr($service['icon_class']); ?>"></i>
               </div>
               <div class="text">
                 <h5 class="upper"><?= esc_html($service['title']); ?></h5>

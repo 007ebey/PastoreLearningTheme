@@ -6,6 +6,7 @@ use Carbon_Fields\Field;
 add_action('carbon_fields_register_fields', function () {
   Container::make('post_meta', __('Page Slider'))
     ->where('post_type', '=', 'page')
+    ->where('post_template', '=', 'front-page.php') 
     ->add_fields([
       Field::make('complex', 'page_slider_slides', 'Slides')
         ->set_layout('tabbed-horizontal')

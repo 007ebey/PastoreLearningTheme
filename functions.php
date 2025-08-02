@@ -468,3 +468,17 @@ function register_portfolio_post_type() {
 }
 add_action('init', 'register_portfolio_post_type');
 
+function register_question_post_type() {
+    register_post_type('question', array(
+        'labels' => array(
+            'name' => 'Questions',
+            'singular_name' => 'Question',
+            'add_new_item' => 'Post a Question',
+        ),
+        'public' => true,
+        'show_in_rest' => true,
+        'supports' => array('title', 'editor'),
+        'menu_icon' => 'dashicons-format-chat',
+    ));
+}
+add_action('init', 'register_question_post_type');
