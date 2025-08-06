@@ -6,7 +6,7 @@ $logo_1x_url = $logo_1x_id ? wp_get_attachment_image_url($logo_1x_id, 'full') : 
 $logo_2x_url = $logo_2x_id ? wp_get_attachment_image_url($logo_2x_id, 'full') : '';
 ?>
 
-<footer class="black-wrapper">
+<footer class="black-wrapper" id="About">
   <div class="container inner">
     <div class="row">
       <div class="col-sm-6">
