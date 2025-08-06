@@ -20,6 +20,7 @@ $logo_2x_url = $logo_2x_id ? wp_get_attachment_image_url($logo_2x_id, 'full') : 
           <?php endif; ?>
           <div class="divide20"></div>
           <p><?php echo esc_html(carbon_get_theme_option('footer_description')); ?></p>
+          <p><?php echo esc_html(carbon_get_theme_option('footer_description_2')); ?></p>
           <p><?php echo esc_html(carbon_get_theme_option('footer_secondary_description')); ?></p>
           <div class="divide5"></div>
           <ul class="social">

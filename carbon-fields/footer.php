@@ -9,6 +9,7 @@ add_action('carbon_fields_register_fields', function () {
             Field::make('image', 'footer_logo_1x', 'Footer Logo 1x'),
             Field::make('image', 'footer_logo_2x', 'Footer Logo 2x'),
             Field::make('textarea', 'footer_description', 'Footer Description')->set_rows(3),
+            Field::make('textarea', 'footer_description_2', 'Footer Description 2')->set_rows(3),
             Field::make('textarea', 'footer_secondary_description', 'Footer Secondary Description')->set_rows(3),
             Field::make('text', 'footer_address', 'Address'),
             Field::make('text', 'footer_phone', 'Phone'),
