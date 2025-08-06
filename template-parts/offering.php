@@ -29,7 +29,7 @@ $services = carbon_get_the_post_meta('services_items');
               </div>
               <div class="text">
                 <h5 class="upper"><?= esc_html($service['title']); ?></h5>
-                <p><?= esc_html($service['description']); ?></p>
+                <p><?= wp_kses( $service['description'], [ 'br' => [] ] ); ?></p>
               </div>
             </div>
           <?php endforeach; ?>

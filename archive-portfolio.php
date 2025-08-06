@@ -1,10 +1,10 @@
 <?php 
 get_header();
  ?>
-
+<?php get_template_part('template-parts/nav'); ?>
 <div class="light-wrapper page-title">
   <div class="container inner">
-    <h1>Portfolio with 3 Columns</h1>
+    <h1>Check out our video catalog</h1>
   </div>
 </div>
 <div class="dark-wrapper">
@@ -72,5 +72,7 @@ get_header();
   </div>
   <!-- /.container -->
 </div>
+
+<?php get_template_part('template-parts/main-footer'); ?>
 
 <?php get_footer(); ?>
