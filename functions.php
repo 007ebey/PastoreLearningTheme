@@ -482,3 +482,6 @@ function register_question_post_type() {
     ));
 }
 add_action('init', 'register_question_post_type');
+
+
+

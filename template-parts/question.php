@@ -2,39 +2,15 @@
   <div class="container inner">
     <div class="thin">
       <div class="section-title text-center">
-        <h2>Post Your Question</h2>
+        <h2>post Your Question</h2>
         <span class="icon"><i class="icon-help"></i></span>
       </div>
 
       <div class="row">
         <div class="col-sm-8">
           <div class="form-container">
-            <?php if (isset($_POST['submit_question'])): ?>
-              <?php
-              $name = sanitize_text_field($_POST['name']);
-              $email = sanitize_email($_POST['email']);
-              $subject = sanitize_text_field($_POST['subject']);
-              $message = sanitize_textarea_field($_POST['message']);
-
-              $post_id = wp_insert_post(array(
-                'post_title'   => wp_trim_words($message, 8, '...'),
-                'post_content' => $message,
-                'post_type'    => 'question',
-                'post_status'  => 'pending'
-              ));
-
-              if ($post_id && !is_wp_error($post_id)) {
-                carbon_set_post_meta($post_id, 'question_name', $name);
-                carbon_set_post_meta($post_id, 'question_email', $email);
-                carbon_set_post_meta($post_id, 'question_subject', $subject);
-                echo '<div class="alert alert-success">Thank you! Your question has been submitted.</div>';
-              } else {
-                echo '<div class="alert alert-danger">There was an error. Please try again.</div>';
-              }
-              ?>
-            <?php endif; ?>
-
-            <form class="forms" method="post">
+            <form class="forms" method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>">
+              <input type="hidden" name="action" value="submit_question">
               <fieldset>
                 <ol>
                   <li class="form-row text-input-row name-field">
@@ -86,3 +62,26 @@
     </div>
   </div>
 </div>
+<script>
+   document.addEventListener("DOMContentLoaded", function () {
+    const form = document.querySelector("form.forms");
+
+    if (form) {
+        form.addEventListener("submit", function (e) {
+            // Optional: prevent instant submit to show something before sending
+            // e.preventDefault();
+
+            // Show a loader or message before submission if you want
+            alert("Qyestion submitted...");
+
+            // Let the form POST normally, but listen for redirect success with hash
+        });
+    }
+
+    // If redirected with success=1 in URL, show alert
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get("success") === "1") {
+        alert("Your question has been submitted successfully!");
+    }
+});
+</script>
