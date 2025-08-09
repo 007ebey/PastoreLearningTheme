@@ -72,7 +72,7 @@
             // e.preventDefault();
 
             // Show a loader or message before submission if you want
-            alert("Qyestion submitted...");
+            alert("Question submitted...");
 
             // Let the form POST normally, but listen for redirect success with hash
         });
