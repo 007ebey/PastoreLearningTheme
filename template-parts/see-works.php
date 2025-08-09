@@ -14,7 +14,8 @@
 
       if ($portfolio_query->have_posts()) :
           while ($portfolio_query->have_posts()) : $portfolio_query->the_post();
-              $image_url = get_the_post_thumbnail_url(get_the_ID(), 'medium');
+              // $image_url = get_the_post_thumbnail_url(get_the_ID(), 'medium');
+              $image_url = carbon_get_post_meta(get_the_ID(), 'thumb_nail_url');
               ?>
               <div class="item">
                 <figure class="icon-overlay medium icn-link">

@@ -365,52 +365,55 @@ add_action('comment_post', function ($comment_id) {
 });
 
 add_action('init', function () {
-    register_post_type('testimonial', [
-        'labels' => [
-            'name' => 'Testimonials',
-            'singular_name' => 'Testimonial',
-        ],
-        'public' => true,
-        'has_archive' => false,
-        'show_in_rest' => true,
-        'supports' => ['title', 'editor', 'custom-fields'],
-        'menu_icon' => 'dashicons-testimonial',
-    ]);
+  register_post_type('testimonial', [
+    'labels' => [
+      'name' => 'Testimonials',
+      'singular_name' => 'Testimonial',
+    ],
+    'public' => true,
+    'has_archive' => false,
+    'show_in_rest' => true,
+    'supports' => ['title', 'editor', 'custom-fields'],
+    'menu_icon' => 'dashicons-testimonial',
+  ]);
 });
 
 // Handle form submission
 add_action('admin_post_nopriv_submit_testimonial', 'render_testimonial_confession_form');
 add_action('admin_post_submit_testimonial', 'render_testimonial_confession_form');
 
-function render_testimonial_confession_form() {
-    handle_testimonial_submission();
+function render_testimonial_confession_form()
+{
+  handle_testimonial_submission();
 }
 
-function handle_testimonial_submission() {
-    if (
-        isset($_POST['name'], $_POST['email'], $_POST['message']) &&
-        !empty($_POST['name']) && !empty($_POST['email']) && !empty($_POST['message'])
-    ) {
-        $post_id = wp_insert_post([
-            'post_type' => 'testimonial',
-            'post_title' => sanitize_text_field($_POST['name']),
-            'post_content' => sanitize_textarea_field($_POST['message']),
-            'post_status' => 'pending',
-        ]);
+function handle_testimonial_submission()
+{
+  if (
+    isset($_POST['name'], $_POST['email'], $_POST['message']) &&
+    !empty($_POST['name']) && !empty($_POST['email']) && !empty($_POST['message'])
+  ) {
+    $post_id = wp_insert_post([
+      'post_type' => 'testimonial',
+      'post_title' => sanitize_text_field($_POST['name']),
+      'post_content' => sanitize_textarea_field($_POST['message']),
+      'post_status' => 'pending',
+    ]);
 
-        if ($post_id && !is_wp_error($post_id)) {
-            update_post_meta($post_id, 'email', sanitize_email($_POST['email']));
-            // Carbon Field is false by default (unchecked)
-        }
+    if ($post_id && !is_wp_error($post_id)) {
+      update_post_meta($post_id, 'email', sanitize_email($_POST['email']));
+      // Carbon Field is false by default (unchecked)
     }
-    wp_redirect(home_url('/thank-you/'));
-    exit;
+  }
+  wp_redirect(home_url('/thank-you/'));
+  exit;
 }
 
 add_action('wp_ajax_filter_projects_by_category', 'filter_projects_by_category_callback');
 add_action('wp_ajax_nopriv_filter_projects_by_category', 'filter_projects_by_category_callback');
 
-function filter_projects_by_category_callback() {
+function filter_projects_by_category_callback()
+{
   $category = sanitize_text_field($_GET['category'] ?? '');
 
   $args = [
@@ -441,7 +444,7 @@ function filter_projects_by_category_callback() {
           <p><?php the_excerpt(); ?></p>
         </div>
       </div>
-    <?php endwhile;
+<?php endwhile;
   else :
     echo '<p>No projects found in this category.</p>';
   endif;
@@ -451,37 +454,108 @@ function filter_projects_by_category_callback() {
 }
 
 
-function register_portfolio_post_type() {
-    register_post_type('portfolio', array(
-        'labels' => array(
-            'name' => 'Portfolios',
-            'singular_name' => 'Portfolio',
-        ),
-        'public' => true,
-        'has_archive' => true,
-        'rewrite' => array('slug' => 'portfolio'),
-        'menu_icon' => 'dashicons-portfolio',
-        'supports' => array('title', 'editor', 'thumbnail'),
-        'taxonomies' => array('category'), // ✅ Adds built-in category support
-  
-    ));
+function register_portfolio_post_type()
+{
+  register_post_type('portfolio', array(
+    'labels' => array(
+      'name' => 'Portfolios',
+      'singular_name' => 'Portfolio',
+    ),
+    'public' => true,
+    'has_archive' => true,
+    'rewrite' => array('slug' => 'portfolio'),
+    'menu_icon' => 'dashicons-portfolio',
+    'supports' => array('title', 'editor', 'thumbnail'),
+    'taxonomies' => array('category'), // ✅ Adds built-in category support
+
+  ));
 }
 add_action('init', 'register_portfolio_post_type');
 
-function register_question_post_type() {
-    register_post_type('question', array(
-        'labels' => array(
-            'name' => 'Questions',
-            'singular_name' => 'Question',
-            'add_new_item' => 'Post a Question',
-        ),
-        'public' => true,
-        'show_in_rest' => true,
-        'supports' => array('title', 'editor'),
-        'menu_icon' => 'dashicons-format-chat',
-    ));
+function register_question_post_type()
+{
+  register_post_type('question', array(
+    'labels' => array(
+      'name' => 'Questions',
+      'singular_name' => 'Question',
+      'add_new_item' => 'Post a Question',
+    ),
+    'public' => true,
+    'show_in_rest' => true,
+    'supports' => array('title', 'editor'),
+    'menu_icon' => 'dashicons-format-chat',
+  ));
 }
 add_action('init', 'register_question_post_type');
 
 
+add_action('wp_enqueue_scripts', function () {
+  if (is_page_template('portal-login.php')) {
 
+    // 1. Enqueue Wordfence Login Security JS
+    wp_enqueue_script(
+      'wordfenceLS-login',
+      plugins_url(
+        'js/login.1736959993.js',
+        WP_PLUGIN_DIR . '/wordfence-login-security/wordfence-login-security.php'
+      ),
+      ['jquery'],
+      null,
+      true
+    );
+
+    // Localize translations for the Wordfence login script
+    wp_localize_script('wordfenceLS-login', 'WFLS_LOGIN_TRANSLATIONS', [
+      'MessageToSupport'                                 => __('Message to Support', 'wordfence'),
+      'Send'                                            => __('Send', 'wordfence'),
+      'ErrorSendingMessage'                             => __('An error was encountered while trying to send the message. Please try again.', 'wordfence'),
+      'ErrorSendingMessageStrong'                       => __('<strong>ERROR</strong>: An error was encountered while trying to send the message. Please try again.', 'wordfence'),
+      'LoginFailed403'                                  => __('Login failed with status code 403. Please contact the site administrator.', 'wordfence'),
+      'LoginFailed403Strong'                            => __('<strong>ERROR</strong>: Login failed with status code 403. Please contact the site administrator.', 'wordfence'),
+      'LoginFailed503'                                  => __('Login failed with status code 503. Please contact the site administrator.', 'wordfence'),
+      'LoginFailed503Strong'                            => __('<strong>ERROR</strong>: Login failed with status code 503. Please contact the site administrator.', 'wordfence'),
+      'Wordfence2FACode'                                => __('Wordfence 2FA Code', 'wordfence'),
+      'RememberFor30Days'                               => __('Remember for 30 days', 'wordfence'),
+      'LogIn'                                           => __('Log In', 'wordfence'),
+      'ErrorAuth'                                       => __('<strong>ERROR</strong>: An error was encountered while trying to authenticate. Please try again.', 'wordfence'),
+      'Wordfence2FAInstructions'                        => __('The Wordfence 2FA Code can be found within the authenticator app you used when first activating two-factor authentication. You may also use one of your recovery codes.', 'wordfence'),
+    ]);
+
+    // 3. Localize WFLSVars with the same handle
+    wp_localize_script('wordfenceLS-login', 'WFLSVars', [
+      'loginPage'       => true,
+      'ajaxurl'         => admin_url('admin-ajax.php'),
+      'nonce'           => wp_create_nonce('wfls-nonce'),
+      'recaptchasitekey' => '',
+      'useCAPTCHA'      => '',
+      'allowremember'   => '',
+      'verification'    => '',
+      'siteURL'         => site_url(),
+    ]);
+
+
+    // 4. Add the hidden token field in your form (required for OTP/captcha)
+    add_action('wp_footer', function () {
+      if (is_page_template('portal-login.php')) {
+        echo '<input type="hidden" name="wfls-token" value="' . esc_attr(wp_create_nonce('wfls-token')) . '">';
+      }
+    });
+  }
+});
+
+add_action('after_setup_theme', function () {
+  if (is_page_template('portal-login.php')) {
+    if (!defined('WP_LOGIN')) {
+      define('WP_LOGIN', true);
+    }
+  }
+});
+
+add_action('wp_footer', function () {
+  if (is_page_template('portal-login.php')) {
+    echo "<script>if(window.WFLSVars){WFLSVars.loginPage = true;}</script>";
+  }
+}, 100);
+
+// In wp-config.php or functions.php
+add_filter('wordfence_is_firewall_enabled', '__return_false');

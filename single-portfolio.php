@@ -39,7 +39,7 @@ $video_url = carbon_get_post_meta(get_the_ID(), 'video_url');
     <?php endif; ?>
 
     <div class="divide30"></div>
-    <h3>Project Details</h3>
+    <h3>Sermon Details</h3>
     <div class="row">
       <div class="col-sm-8">
         <?php the_content(); ?>
@@ -55,12 +55,7 @@ $video_url = carbon_get_post_meta(get_the_ID(), 'video_url');
               }
             ?>
           </li>
-          <li><span>Client:</span> <?php echo esc_html(carbon_get_post_meta(get_the_ID(), 'client_name')); ?></li>
-          <li><span>Link:</span>
-            <a href="<?php echo esc_url(carbon_get_post_meta(get_the_ID(), 'project_link')); ?>">
-              <?php echo esc_html(carbon_get_post_meta(get_the_ID(), 'project_link')); ?>
-            </a>
-          </li>
+          <li><span>Speaker:</span> <?php echo esc_html(carbon_get_post_meta(get_the_ID(), 'client_name')); ?></li>
         </ul>
       </div>
     </div>

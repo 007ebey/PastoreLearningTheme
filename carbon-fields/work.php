@@ -13,8 +13,8 @@ function crb_register_portfolio_meta() {
 
             Field::make('text', 'client_name', 'Client Name'),
 
-            Field::make('text', 'project_link', 'Project Link')
-                ->set_help_text('Full URL starting with https://'),
+            Field::make('text', 'thumb_nail_url', 'Thumb nail link')
+                ->set_help_text('Provide thumb nail link example https://img.youtube.com/vi/XXXX/mqdefault.jpg '),
         ));
 }
 
