@@ -42,7 +42,8 @@ get_header();
               }
             }
 
-            $thumb = get_the_post_thumbnail_url(get_the_ID(), 'medium');
+            // $thumb = get_the_post_thumbnail_url(get_the_ID(), 'medium');
+            $thumb  = carbon_get_post_meta(get_the_ID(), 'thumb_nail_url');
             $link = get_permalink();
         ?>
             <li class="item<?php echo esc_attr($term_slugs); ?>">
