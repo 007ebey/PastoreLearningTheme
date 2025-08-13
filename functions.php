@@ -338,20 +338,22 @@ add_action('after_setup_theme', function () {
   remove_action('wp_head', 'wp_enqueue_speculationrules', 1);
 });
 
-function register_project_post_type()
-{
+function register_project_post_type() {
   register_post_type('project', [
     'labels' => [
-      'name' => 'Projects',
+      'name'          => 'Projects',
       'singular_name' => 'Project',
     ],
-    'public' => true,
-    'has_archive' => true,
-    'rewrite' => ['slug' => 'projects'],
-    'supports' => ['title', 'editor', 'thumbnail', 'comments'],
-    'menu_icon' => 'dashicons-portfolio',
+    'public'       => true,
+    'has_archive'  => true,
+    'rewrite'      => ['slug' => 'projects'],
+    'supports'     => ['title', 'editor', 'thumbnail', 'comments'],
+    'taxonomies'   => ['category'], // ✅ Enable default categories
+    'menu_icon'    => 'dashicons-portfolio',
   ]);
 }
+add_action('init', 'register_project_post_type');
+
 add_action('init', function () {
   register_project_post_type(); // ensure it's defined before flushing
   // flush_rewrite_rules(); // expensive, avoid on production
@@ -408,51 +410,6 @@ function handle_testimonial_submission()
   wp_redirect(home_url('/thank-you/'));
   exit;
 }
-
-add_action('wp_ajax_filter_projects_by_category', 'filter_projects_by_category_callback');
-add_action('wp_ajax_nopriv_filter_projects_by_category', 'filter_projects_by_category_callback');
-
-function filter_projects_by_category_callback()
-{
-  $category = sanitize_text_field($_GET['category'] ?? '');
-
-  $args = [
-    'post_type' => 'project',
-    'post_status' => 'publish',
-    'posts_per_page' => -1,
-    'meta_query' => [
-      [
-        'key' => 'project_categories',
-        'value' => $category,
-        'compare' => 'LIKE',
-      ]
-    ]
-  ];
-
-  $query = new WP_Query($args);
-
-  if ($query->have_posts()) :
-    while ($query->have_posts()) : $query->the_post(); ?>
-      <div class="col-sm-6 mb-4 project-item">
-        <div class="project-box">
-          <h4><?php the_title(); ?></h4>
-          <?php if (has_post_thumbnail()): ?>
-            <div class="project-thumb">
-              <?php the_post_thumbnail('medium'); ?>
-            </div>
-          <?php endif; ?>
-          <p><?php the_excerpt(); ?></p>
-        </div>
-      </div>
-<?php endwhile;
-  else :
-    echo '<p>No projects found in this category.</p>';
-  endif;
-
-  wp_reset_postdata();
-  wp_die();
-}
-
 
 function register_portfolio_post_type()
 {

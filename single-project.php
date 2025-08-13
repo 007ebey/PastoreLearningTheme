@@ -63,9 +63,18 @@ get_header();
             <div class="col-sm-4">
               <ul class="item-details">
                 <li><span>Date:</span> <?php echo esc_html(carbon_get_the_post_meta('project_date')); ?></li>
-                <li><span>Categories:</span> <?php echo esc_html(carbon_get_the_post_meta('project_categories')); ?></li>
-                <li><span>Client:</span> <?php echo esc_html(carbon_get_the_post_meta('project_client')); ?></li>
-                <li><span>Link:</span> <a href="<?php echo esc_url(carbon_get_the_post_meta('project_link')); ?>"><?php echo esc_html(carbon_get_the_post_meta('project_link')); ?></a></li>
+                <li>
+                  <span>Categories:</span>
+                  <?php
+                  $cats = get_the_category();
+                  if (! empty($cats)) {
+                    echo esc_html(implode(', ', wp_list_pluck($cats, 'name')));
+                  } else {
+                    echo 'Uncategorized';
+                  }
+                  ?>
+                </li>
+                <li><span>Speaker:</span> <?php echo esc_html(carbon_get_the_post_meta('project_client')); ?></li>
               </ul>
             </div>
             <!-- /.col-sm-4 -->
@@ -107,7 +116,7 @@ get_header();
                   if ($is_admin || $comment->user_id == $user_id) {
                     $comment_type = get_comment_meta($comment->comment_ID, 'comment_type', true);
                 ?>
-                    <li>
+                    <li id="comment-<?php comment_ID(); ?>">
                       <div class="user">
                         <?php echo get_avatar($comment, 64); ?>
                       </div>
@@ -117,14 +126,26 @@ get_header();
                             <h2><?php echo esc_html($comment->comment_author); ?></h2>
                             <div class="meta">
                               <div class="date"><?php echo get_comment_date('', $comment); ?></div>
-                              <a class="reply-link" href="#">Reply</a>
                             </div>
                           </div>
                           <p>
-                            <?php if ($comment_type): ?>
-                              <b><?php echo esc_html($comment_type); ?></b>
-                            <?php endif; ?>
-                            <?php echo esc_html($comment->comment_content); ?>
+                            <?php
+                            // Show "In reply to" if comment has a parent
+                            if ($comment->comment_parent) {
+                              $parent_comment = get_comment($comment->comment_parent);
+                              if ($parent_comment) {
+                                echo '<small class="in-reply-to">In reply to ' . esc_html($parent_comment->comment_author) . '</small><br>';
+                              }
+                            }
+
+                            // Show comment type if set
+                            if (! empty($comment_type)) {
+                              echo '<b>' . esc_html($comment_type) . '</b> ';
+                            }
+
+                            // Show comment content
+                            echo esc_html($comment->comment_content);
+                            ?>
                           </p>
                         </div>
                       </div>
@@ -163,6 +184,10 @@ get_header();
                     <input type="radio" name="comment_type" value="Action">
                     <span>Action</span>
                   </label>
+                  <label>
+                    <input type="radio" name="comment_type" value="Prayer_Point">
+                    <span>Prayer Point</span>
+                  </label>
                 </fieldset>
 
                 <div class="message-field">
@@ -191,27 +216,23 @@ get_header();
         <h2>Related Works</h2>
         <span class="icon"><i class="icon-picture"></i></span>
       </div>
+
       <?php
       $current_id = get_the_ID();
-      $current_categories = carbon_get_the_post_meta('project_categories'); // e.g., "healing,growth,charm"
+      $categories = wp_get_post_terms($current_id, 'category', ['fields' => 'ids']); // Get category IDs
 
-      if (!empty($current_categories)) {
-        $category_terms = array_map('trim', explode(',', $current_categories)); // ['healing', 'growth', 'charm']
-
-        $meta_query = ['relation' => 'OR'];
-        foreach ($category_terms as $term) {
-          $meta_query[] = [
-            'key'     => 'project_categories',
-            'value'   => $term,
-            'compare' => 'LIKE', // partial match
-          ];
-        }
-
+      if (!empty($categories)) {
         $related = new WP_Query([
           'post_type'      => 'project',
           'posts_per_page' => 6,
           'post__not_in'   => [$current_id],
-          'meta_query'     => $meta_query,
+          'tax_query'      => [
+            [
+              'taxonomy' => 'category',
+              'field'    => 'term_id',
+              'terms'    => $categories,
+            ],
+          ],
         ]);
 
         if ($related->have_posts()) : ?>
@@ -224,20 +245,23 @@ get_header();
                 <div class="image-caption">
                   <h3><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h3>
                   <span class="meta">
-                    <?php echo esc_html(carbon_get_the_post_meta('project_categories')); ?>
+                    <?php
+                    // Display category names as comma-separated
+                    $cats = wp_get_post_terms(get_the_ID(), 'category', ['fields' => 'names']);
+                    echo esc_html(implode(', ', $cats));
+                    ?>
                   </span>
                 </div>
               </div>
             <?php endwhile; ?>
           </div>
-      <?php
-          wp_reset_postdata();
-        endif;
+          <?php wp_reset_postdata(); ?>
+      <?php endif;
       }
       ?>
-
     </div>
   </div>
+
 
 
   <?php get_footer(); ?>

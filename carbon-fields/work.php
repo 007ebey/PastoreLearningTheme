@@ -11,7 +11,7 @@ function crb_register_portfolio_meta() {
             Field::make('text', 'video_url', 'Video URL')
                 ->set_help_text('Use embed URL like https://player.vimeo.com/video/XXXX or https://www.youtube.com/embed/XXXX'),
 
-            Field::make('text', 'client_name', 'Client Name'),
+            Field::make('text', 'client_name', 'Speaker Name'),
 
             Field::make('text', 'thumb_nail_url', 'Thumb nail link')
                 ->set_help_text('Provide thumb nail link example https://img.youtube.com/vi/XXXX/mqdefault.jpg '),
