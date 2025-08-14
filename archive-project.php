@@ -1,7 +1,7 @@
 <?php
 // Redirect visitors who are not logged in
 if ( ! is_user_logged_in() ) {
-    wp_redirect( home_url( '/login-page/' ) );
+    wp_redirect( home_url( '/login/' ) );
     exit;
 }
 
