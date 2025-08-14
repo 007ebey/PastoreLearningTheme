@@ -1,14 +1,15 @@
 <?php
+
 /**
  * Template Name: Portal Login
  * Template Post Type: page
  */
 
 // Allow Wordfence to accept this as a valid login form
-add_filter( 'wfls_custom_login_form', '__return_true' );
+add_filter('wfls_custom_login_form', '__return_true');
 
 // Set WordPress test cookie for login validation
-setcookie( TEST_COOKIE, 'WP Cookie check', 0, COOKIEPATH, COOKIE_DOMAIN );
+setcookie(TEST_COOKIE, 'WP Cookie check', 0, COOKIEPATH, COOKIE_DOMAIN);
 
 get_header();
 ?>
@@ -31,20 +32,20 @@ get_header();
         <div class="form-container" style="max-width: 400px; margin: 50px auto;">
           <h2>Login</h2>
 
-          <?php if ( is_user_logged_in() ) :
+          <?php if (is_user_logged_in()) :
             $current_user = wp_get_current_user();
           ?>
-            <p>Welcome, <strong><?php echo esc_html( $current_user->display_name ); ?></strong>! You are logged in.</p>
-            <p><a href="<?php echo esc_url( wp_logout_url( home_url() ) ); ?>">Log out</a></p>
+            <p>Welcome, <strong><?php echo esc_html($current_user->display_name); ?></strong>! You are logged in.</p>
+            <p><a href="<?php echo esc_url(wp_logout_url(home_url())); ?>">Log out</a></p>
           <?php else : ?>
 
             <?php
             // Output default WP login form but keep Wordfence hooks working
             ob_start();
-            do_action( 'login_form' ); // Wordfence captcha / 2FA
+            do_action('login_form'); // Wordfence captcha / 2FA
             $extra_fields = ob_get_clean();
 
-            wp_login_form( [
+            wp_login_form([
               'redirect'       => home_url('/projects/'),
               'remember'       => false,
               'label_username' => 'Username or Email',
@@ -56,7 +57,7 @@ get_header();
               'id_remember'    => 'rememberme',
               'id_submit'      => 'wp-submit',
               'value_remember' => true,
-            ] );
+            ]);
 
             // Inject Wordfence's HTML inside the form (after password field)
             ?>
@@ -86,11 +87,13 @@ get_header();
             transition: border-color 0.2s ease-in, box-shadow 0.2s ease-in;
             box-sizing: border-box;
           }
+
           #authcode:focus {
             border-color: #3f8dbf;
             box-shadow: 0 0 4px rgba(63, 141, 191, 0.3);
             outline: none;
           }
+
           label[for="authcode"] {
             display: block;
             margin-bottom: 6px;
@@ -98,11 +101,13 @@ get_header();
             color: #616161;
             font-size: 14px;
           }
+
           .g-recaptcha {
             margin-top: 15px;
             transform: scale(1);
             transform-origin: 0 0;
           }
+
           @media (max-width: 400px) {
             .g-recaptcha {
               transform: scale(0.9);
@@ -128,4 +133,5 @@ get_header();
 </div>
 
 <?php get_template_part('template-parts/main-footer'); ?>
+
 <?php get_footer(); ?>
