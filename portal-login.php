@@ -26,7 +26,7 @@ get_header();
   <div class="container inner">
     <div class="row">
       <div class="col-sm-6">
-        <h3>Registered Customers</h3>
+        <h3>Welcome</h3>
         <p>Login to access our private video catalog and access other features (coming soon!).</p>
         <div class="divide15"></div>
         <div class="form-container" style="max-width: 400px; margin: 50px auto;">
