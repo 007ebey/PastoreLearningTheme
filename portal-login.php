@@ -46,7 +46,7 @@ get_header();
             $extra_fields = ob_get_clean();
 
             wp_login_form([
-              'redirect'       => home_url('/projects/'),
+              'redirect'       => home_url('/login/'),
               'remember'       => false,
               'label_username' => 'Username or Email',
               'label_password' => 'Password',
@@ -131,6 +131,91 @@ get_header();
     </div>
   </div>
 </div>
+
+<div class="light-wrapper">
+  <div class="container inner">
+    <div class="section-title text-center">
+      <h2>Your interactions</h2>
+      <span class="icon"><i class="icon-cog-1"></i></span>
+    </div>
+    <div class="row">
+      <?php
+      if (is_user_logged_in()) {
+
+        $current_user_id = get_current_user_id();
+
+        $args = [
+          'post_type'      => 'project',
+          'posts_per_page' => -1,
+          'post_status'    => 'publish'
+        ];
+
+        $projects = new WP_Query($args);
+
+        if ($projects->have_posts()) :
+          $count = 0;
+          while ($projects->have_posts()) : $projects->the_post();
+
+            // Get only approved comments for this project made by current user
+            $comments = get_comments([
+              'post_id' => get_the_ID(),
+              'status'  => 'approve',
+              'orderby' => 'comment_date',
+              'order'   => 'DESC',
+              'user_id' => $current_user_id
+            ]);
+      ?>
+            <div class="col-sm-6">
+              <?php if (!empty($comments)) :
+                $collapse_id = 'collapse-' . get_the_ID();
+              ?>
+                <div class="divide20"></div>
+                <div class="panel-group" id="accordion-<?php the_ID(); ?>">
+                  <div class="panel panel-default">
+                    <div class="panel-heading">
+                      <h4 class="panel-title">
+                        <a data-toggle="collapse"
+                          class="panel-toggle"
+                          data-parent="#accordion-<?php the_ID(); ?>"
+                          href="#<?php echo esc_attr($collapse_id); ?>">
+                          <?php the_title(); ?>
+                        </a>
+                      </h4>
+                    </div>
+                    <div id="<?php echo esc_attr($collapse_id); ?>"
+                      class="panel-collapse collapse in">
+                      <div class="panel-body">
+                        <?php foreach ($comments as $comment) : ?>
+                          <p>
+                            <b><?php echo esc_html(get_comment_meta($comment->comment_ID, 'comment_type', true)); ?>:</b>
+                            <?php echo esc_html($comment->comment_content); ?>
+                          </p>
+                        <?php endforeach; ?>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              <?php endif; ?>
+            </div>
+      <?php
+            $count++;
+            if ($count % 2 === 0) {
+              echo '</div><div class="row">';
+            }
+          endwhile;
+          wp_reset_postdata();
+        else :
+          echo '<p>No projects found.</p>';
+        endif;
+
+      } else {
+        echo '<p>You need to be logged in to see your interactions.</p>';
+      }
+      ?>
+    </div>
+  </div>
+</div>
+
 
 <?php get_template_part('template-parts/main-footer'); ?>
 

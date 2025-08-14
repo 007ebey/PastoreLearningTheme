@@ -7,6 +7,10 @@ get_header();
 <body class="full-layout">
   <div class="body-wrapper">
 
+  <?php get_template_part('template-parts/nav'); ?>
+
+  <div class="offset"></div>
+
     <!-- Your full navigation HTML here (from your static code) -->
 
     <div class="light-wrapper page-title">
