@@ -6,7 +6,7 @@ use Carbon_Fields\Field;
 add_action('carbon_fields_register_fields', function () {
   Container::make('post_meta', __('Page Slider'))
     ->where('post_type', '=', 'page')
-    ->where('post_template', '=', 'front-page.php') 
+    ->where('post_template', '=', 'front-page.php')
     ->add_fields([
       Field::make('complex', 'page_slider_slides', 'Slides')
         ->set_layout('tabbed-horizontal')
@@ -163,6 +163,54 @@ add_action('carbon_fields_register_fields', function () {
                 'value' => true,
               ]
             ]),
+          Field::make('complex', 'video_elements', 'Video')
+            ->set_layout('tabbed-vertical')
+            ->add_fields([
+              Field::make('text', 'video_url', 'YouTube url')
+                ->set_help_text('Paste url example http://www.youtube.com/embed/YHWkro9-e9Q '),
+              Field::make('text', 'thumb_nail_url', 'Thumb nail link')
+                ->set_help_text('Provide thumb nail link example https://img.youtube.com/vi/XXXX/maxresdefault.jpg '),
+              Field::make('text', 'title_style_class', 'Video Style Class') // e.g. bold, lite, lite small
+                ->set_help_text('CSS classes like huge, big, small, bold,lite,lite small,dark,opacity-bg.'),
+              Field::make('text', 'title_incoming_animation_class', 'Video Incoming Animation Class') // e.g. sfb, lft
+                ->set_help_text('Incoming animation class, e.g., sft - Short from Top
+                              sfb - Short from Bottom
+                              sfr - Short from Right
+                              sfl - Short from Lef
+                              lft - Long from Top
+                              lfb - Long from Bottom
+                              lfr - Long from Right
+                              lfl - Long from Left
+                              skewfromleft - Skew from Left
+                              skewfromright - Skew from Right
+                              skewfromleftshort - Skew Short from Left
+                              skewfromrightshort - Skew Short from Right
+                              fade - fading
+                              randomrotate- Fade in, Rotate from a Random position and Degree
+              '),
+              Field::make('text', 'title_outgoing_animation_class', 'Video Outgoing Animation Class') // e.g. sfb, lft
+                ->set_help_text('Outgoing animation class, stt - Short to Top
+                            stb - Short to Bottom
+                            str - Short to Right
+                            stl - Short to Left
+                            ltt - Long to Top
+                            ltb - Long to Bottom
+                            ltr - Long to Right
+                            ltl - Long to Left
+                            skewtoleft - Skew to Left
+                            skewtoright - Skew to Right
+                            skewtoleftshort - Skew Short to Left
+                            skewtorightshort - Skew Short to Right
+                            fadeout - fading
+                            randomrotateout- Fade in, Rotate from a Random position and Degree
+                            customout - Custom Outgoing Animation - see below all data settings
+              '),
+              Field::make('text', 'title_data_x', 'Video Data-X')->set_default_value('center'),
+              Field::make('text', 'title_data_y', 'Video Data-Y')->set_default_value('198'),
+              Field::make('text', 'title_data_speed', 'Video Speed')->set_default_value('900'),
+              Field::make('text', 'title_data_start', 'Video Start Time')->set_default_value('800'),
+              Field::make('text', 'title_data_easing', 'Video Easing')->set_default_value('Sine.easeOut')
+            ])->set_max(1),
         ])
 
     ]);
