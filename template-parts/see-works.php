@@ -1,7 +1,7 @@
 <div class="black-wrapper" id="catalog">
   <div class="container inner">
     <div class="section-title text-center">
-      <h2>Our Public catalog</h2>
+      <h2>Our Resources</h2>
       <span class="icon"><i class="icon-picture"></i></span>
     </div>
 

@@ -4108,3 +4108,29 @@ input:focus:-ms-input-placeholder {
   position: relative;
   z-index: 20;
 }
+
+.big_white {
+    font-size: 36px;
+    line-height: 36px;
+    font-weight: 800;
+    color: #fff;
+    text-shadow: none;
+    background-color: transparent;
+    padding: 0;
+    margin: 0;
+    border-width: 0;
+    letter-spacing: 0;
+}
+
+.big_orange {
+    font-size: 36px;
+    line-height: 36px;
+    font-weight: 800;
+    color: #fff;
+    text-shadow: none;
+    background-color: #fb8f2c; /* bright orange background */
+    padding: 10px 20px;
+    margin: 0;
+    border-width: 0;
+    letter-spacing: 0;
+}

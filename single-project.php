@@ -59,7 +59,7 @@ get_header();
             <div class="divide30"></div>
             <!-- /.col-sm-8 -->
             <div class="col-sm-8 lp30">
-              <h3>Project Details</h3>
+              <h3>Sermon Details</h3>
               <p> <?php the_content(); ?></p>
               <div class="divide5"></div>
             </div>

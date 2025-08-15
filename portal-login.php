@@ -50,7 +50,7 @@ get_header();
               'remember'       => false,
               'label_username' => 'Username or Email',
               'label_password' => 'Password',
-              'label_log_in'   => 'Login',
+              'label_log_in'   => 'Submit',
               'form_id'        => 'loginform',
               'id_username'    => 'user_login',
               'id_password'    => 'user_pass',
