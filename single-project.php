@@ -7,9 +7,9 @@ get_header();
 <body class="full-layout">
   <div class="body-wrapper">
 
-  <?php get_template_part('template-parts/nav'); ?>
+    <?php get_template_part('template-parts/nav'); ?>
 
-  <div class="offset"></div>
+    <div class="offset"></div>
 
     <!-- Your full navigation HTML here (from your static code) -->
 
@@ -130,6 +130,7 @@ get_header();
                             <h2><?php echo esc_html($comment->comment_author); ?></h2>
                             <div class="meta">
                               <div class="date"><?php echo get_comment_date('', $comment); ?></div>
+                              <a href="#" class="delete-comment" data-comment-id="<?php echo esc_attr($comment->comment_ID); ?>">Delete</a>
                             </div>
                           </div>
                           <p>
@@ -277,6 +278,11 @@ get_header();
   $video_id = $matches[1] ?? '';
   ?>
   <script type="text/javascript">
+    var tag = document.createElement('script');
+    tag.src = "https://www.youtube.com/iframe_api";
+    var firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+    
     let player;
     let duration = 0;
     const youtubeVideoId = "<?php echo esc_js($video_id); ?>";

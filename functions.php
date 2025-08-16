@@ -516,3 +516,40 @@ add_action('wp_footer', function () {
 
 // In wp-config.php or functions.php
 add_filter('wordfence_is_firewall_enabled', '__return_false');
+
+function mytheme_enqueue_comment_delete_script() {
+    wp_enqueue_script(
+        'comment-delete',
+        get_template_directory_uri() . '/style/js/comment-delete.js',
+        ['jquery'],
+        null,
+        true
+    );
+
+    wp_localize_script('comment-delete', 'commentDelete', [
+        'ajax_url' => admin_url('admin-ajax.php'),
+        'nonce'    => wp_create_nonce('delete_comment_nonce'),
+    ]);
+}
+add_action('wp_enqueue_scripts', 'mytheme_enqueue_comment_delete_script');
+
+// Handle AJAX delete comment
+add_action('wp_ajax_delete_comment', 'handle_delete_comment');
+function handle_delete_comment() {
+    // Verify nonce
+    check_ajax_referer('delete_comment_nonce', 'nonce');
+
+    if (empty($_POST['comment_id'])) {
+        wp_send_json_error('No comment ID provided.');
+    }
+
+    $comment_id = intval($_POST['comment_id']);
+
+    // Try to delete comment
+    if (wp_delete_comment($comment_id, true)) {
+        wp_send_json_success(array('comment_id' => $comment_id));
+    } else {
+        wp_send_json_error('Failed to delete comment.');
+    }
+}
+
