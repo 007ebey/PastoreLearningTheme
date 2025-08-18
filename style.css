@@ -4110,8 +4110,8 @@ input:focus:-ms-input-placeholder {
 }
 
 .big_white {
-    font-size: 36px;
-    line-height: 36px;
+    font-size: 24px;
+    line-height: 24px;
     font-weight: 800;
     color: #fff;
     text-shadow: none;
@@ -4123,8 +4123,8 @@ input:focus:-ms-input-placeholder {
 }
 
 .big_orange {
-    font-size: 36px;
-    line-height: 36px;
+    font-size: 24px;
+    line-height: 24px;
     font-weight: 800;
     color: #fff;
     text-shadow: none;
