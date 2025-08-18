@@ -4109,7 +4109,7 @@ input:focus:-ms-input-placeholder {
   z-index: 20;
 }
 
-.very_big_white {
+.bigger_white {
     font-size: 32px;
     line-height: 24px;
     font-weight: 800;
