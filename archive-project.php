@@ -20,9 +20,26 @@ get_header();
   <div class="container inner">
     <div class="portfolio">
       <?php
+ 
+      $project_posts = get_posts(array(
+        'post_type'      => 'project',
+        'posts_per_page' => -1,
+        'fields'         => 'ids',
+      ));
+
+      $used_cat_ids = array();
+      if ($project_posts) {
+        foreach ($project_posts as $p_id) {
+          $cats = wp_get_post_terms($p_id, 'category', array('fields' => 'ids'));
+          $used_cat_ids = array_merge($used_cat_ids, $cats);
+        }
+        $used_cat_ids = array_unique($used_cat_ids);
+      }
+
       $categories = get_categories(array(
         'taxonomy'   => 'category',
         'hide_empty' => true,
+        'include'    => $used_cat_ids,
       ));
 
       echo '<ul class="filter">';

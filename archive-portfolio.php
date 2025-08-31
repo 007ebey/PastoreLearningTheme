@@ -1,6 +1,6 @@
-<?php 
+<?php
 get_header();
- ?>
+?>
 <?php get_template_part('template-parts/nav'); ?>
 <div class="light-wrapper page-title">
   <div class="container inner">
@@ -11,9 +11,26 @@ get_header();
   <div class="container inner">
     <div class="portfolio">
       <?php
+
+      $portfolio_posts = get_posts(array(
+        'post_type'      => 'portfolio',
+        'posts_per_page' => -1,
+        'fields'         => 'ids',
+      ));
+
+      $used_cat_ids = array();
+      if ($portfolio_posts) {
+        foreach ($portfolio_posts as $p_id) {
+          $cats = wp_get_post_terms($p_id, 'category', array('fields' => 'ids'));
+          $used_cat_ids = array_merge($used_cat_ids, $cats);
+        }
+        $used_cat_ids = array_unique($used_cat_ids);
+      }
+
       $categories = get_categories(array(
         'taxonomy' => 'category',
         'hide_empty' => true,
+        'include'    => $used_cat_ids,
       ));
 
       echo '<ul class="filter">';
