@@ -29,7 +29,9 @@ get_header();
           <div class="col-sm-16">
             <div class="video-wrapper" style="position: relative; width: 100%; max-width: 100%;">
               <figure class="player">
-                <div id="youtube-player"></div>
+                <div id="youtube-wrapper" style="position: relative; width: 100%; padding-bottom: 56.25%; height: 0; overflow: hidden;">
+                  <div id="youtube-player" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"></div>
+                </div>
                 <!-- FULL BLOCKING OVERLAY -->
                 <div id="video-block-overlay" style="
                       position: absolute;
@@ -282,15 +284,13 @@ get_header();
     tag.src = "https://www.youtube.com/iframe_api";
     var firstScriptTag = document.getElementsByTagName('script')[0];
     firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-    
+
     let player;
     let duration = 0;
     const youtubeVideoId = "<?php echo esc_js($video_id); ?>";
 
     function onYouTubeIframeAPIReady() {
       player = new YT.Player('youtube-player', {
-        height: '658',
-        width: '1170',
         videoId: youtubeVideoId,
         events: {
           'onReady': onPlayerReady
